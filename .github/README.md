@@ -11,7 +11,7 @@
 [![The Central Repository](https://img.shields.io/maven-central/v/us.fatehi/schemacrawler)](https://central.sonatype.com/search?q=us.fatehi.schemacrawler&sort=name)
 
 
-# <img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler-API/main/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" valign="middle"/> SchemaCrawler
+# <img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler/main/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" valign="middle"/> SchemaCrawler
 
 > [!NOTE]  
 > * Please see the [SchemaCrawler website](https://www.schemacrawler.com/) for more details.
