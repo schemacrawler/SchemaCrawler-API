@@ -2,7 +2,6 @@
 **:star: Star it :arrow_heading_up: if you love it!**
 
 [![Quick Build](https://github.com/schemacrawler/SchemaCrawler-API/workflows/Quick%20Build/badge.svg)](https://github.com/schemacrawler/SchemaCrawler-API/actions?query=workflow%3A%22Quick+Build%22)
-[![Database Integration Tests](https://github.com/schemacrawler/SchemaCrawler-API/actions/workflows/database-integration-tests.yml/badge.svg?branch=main)](https://github.com/schemacrawler/SchemaCrawler-API/actions/workflows/database-integration-tests.yml)
 [![Codacy Grade](https://app.codacy.com/project/badge/Grade/84c0a068ce9349f2bcaa07b5977bd932)](https://app.codacy.com/gh/schemacrawler/SchemaCrawler-API/dashboard)
 [![Codacy Coverage](https://img.shields.io/codacy/coverage/84c0a068ce9349f2bcaa07b5977bd932)](https://app.codacy.com/gh/schemacrawler/SchemaCrawler-API/dashboard)
 
@@ -10,8 +9,6 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/schemacrawler/schemacrawler?style=social)
 
 [![The Central Repository](https://img.shields.io/maven-central/v/us.fatehi/schemacrawler)](https://central.sonatype.com/search?q=us.fatehi.schemacrawler&sort=name)
-[![Scoop](https://img.shields.io/scoop/v/schemacrawler?color=0F80C1)](https://github.com/ScoopInstaller/Main/blob/master/bucket/schemacrawler.json)
-[![Chocolatey](https://img.shields.io/chocolatey/v/schemacrawler?color=0F80C1)]( https://community.chocolatey.org/packages/schemacrawler)
 
 
 # <img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler-API/main/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" valign="middle"/> SchemaCrawler
