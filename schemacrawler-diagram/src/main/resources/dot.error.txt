@@ -1,4 +1,0 @@
-If this is a Graphviz error, please reinstall, and make 
-it available on the system PATH. If you are unable to 
-install Graphviz, consider generating a DOT file in the
-"scdot" format.

@@ -11,7 +11,6 @@ updates:
         update-types: ["version-update:semver-major"]
     labels:
       - "dependencies"
-      - ":children_crossing: dependencies"
     assignees:
       - "sualeh"
       - "schemacrawler"
@@ -21,7 +20,6 @@ updates:
       interval: "weekly"
     labels:
       - "dependencies"
-      - ":children_crossing: dependencies"
     assignees:
       - sualeh
       - schemacrawler

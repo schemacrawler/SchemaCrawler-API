@@ -1,3 +1,0 @@
-- id: schemacrawler.tools.linter.LinterTableWithNoPrimaryKey
-  severity: critical
-  threshold: 2

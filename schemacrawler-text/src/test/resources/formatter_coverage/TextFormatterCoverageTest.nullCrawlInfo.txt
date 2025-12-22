@@ -1,7 +1,0 @@
-
-Database Information
--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=-
-database product name                     Mocked Database               
-database product version                  0.0.1                         
-database user name                                                      
-

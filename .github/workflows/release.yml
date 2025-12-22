@@ -42,9 +42,6 @@ jobs:
         java-version: 17
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
         gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-    - id: install-graphviz
-      name: Install Graphviz
-      uses: sualeh/install-graphviz@v1.0.3
 
 # BUILD FOR DISTRIBUTION
     - id: build
@@ -55,60 +52,9 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
-          -Ddistrib \
           clean install
-    - id: show-distribiution
-      name: Show distribution directory
-      shell: bash
-      run: |
-        # Show distribution directory
-        echo "Show distribution directory"
-        ls -1R ./schemacrawler-distrib/target/_expanded-distribution
-
-# BUILD AND PUBLISH DOCKER IMAGE
-    - id: setup-qemu
-      name: Setup QEMU
-      uses: docker/setup-qemu-action@v3
-
-    - id: setup-buildx
-      name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - id: docker-login
-      name: Log into Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - id: build-docker-image
-      name: Build and Push Docker Image
-      uses: docker/build-push-action@v6
-      with:
-        file: ./schemacrawler-docker/Dockerfile
-        context: ./schemacrawler-distrib/target/_expanded-distribution
-        platforms: |-
-          linux/amd64
-          linux/arm64
-        tags: |-
-          schemacrawler/schemacrawler:v17.1.7
-          schemacrawler/schemacrawler:latest
-        sbom: true
-        provenance: true
-        push: true
 
 # CREATE GITHUB RELEASE AND ADD ASSETS
-    - id: upload-artifacts
-      name: Upload installers
-      uses: actions/upload-artifact@v6
-      with:
-        name: release-artifacts-v17.1.7
-        path: |
-          ./schemacrawler-distrib/target/schemacrawler-17.1.7-distribution.zip
-          ./schemacrawler-distrib/target/schemacrawler-17.1.7-distribution.zip.SHA-512
-          ./schemacrawler-distrib/target/schemacrawler-17.1.7-bin.zip
-          ./schemacrawler-distrib/target/schemacrawler-17.1.7-bin.zip.SHA-512
-        retention-days: 1
     - id: create-release
       name: Create GitHub release
       uses: softprops/action-gh-release@v2
@@ -119,7 +65,7 @@ jobs:
         draft: false
         prerelease: false
         body: |
-          SchemaCrawler ${{ github.event.release.tag_name }} release at last commit ${{ github.sha }}
+          SchemaCrawler API ${{ github.event.release.tag_name }} release at last commit ${{ github.sha }}
           See the change history at https://www.schemacrawler.com/changes-report.html
         generate_release_notes: true
         files: |
@@ -143,7 +89,6 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
-          -Ddistrib \
           -Dmaven.javadoc.skip=false \
           -Dskip.signing.artifacts=false \
           clean deploy

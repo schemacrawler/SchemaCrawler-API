@@ -49,8 +49,8 @@
     </developer>
   </developers>
   <scm>
-    <url>https://github.com/schemacrawler/SchemaCrawler</url>
-    <connection>scm:git:git://github.com/schemacrawler/SchemaCrawler.git</connection>
+    <url>https://github.com/schemacrawler/SchemaCrawler-API</url>
+    <connection>scm:git:git://github.com/schemacrawler/SchemaCrawler-API.git</connection>
   </scm>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,2 +1,0 @@
-Output generated from schemacrawler.test.utility.testcommand.TestCommand
-TestOptions [testCommandParameter=known-value]

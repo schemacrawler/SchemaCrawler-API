@@ -38,18 +38,6 @@
       <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-text</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-diagram</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
 
     <dependency>
       <groupId>us.fatehi</groupId>
@@ -128,8 +116,6 @@
                   <include>us.fatehi:schemacrawler-api</include>
                   <include>us.fatehi:schemacrawler-tools</include>
                   <include>us.fatehi:schemacrawler-loader</include>
-                  <include>us.fatehi:schemacrawler-text</include>
-                  <include>us.fatehi:schemacrawler-diagram</include>
                 </includes>
               </artifactSet>
               <createSourcesJar>true</createSourcesJar>
