@@ -54,6 +54,17 @@ jobs:
           --batch-mode \
           clean install
 
+# EXTRACT VERSION FROM TAG
+    - id: extract-version
+      name: Extract version from tag
+      if: startsWith(github.ref, 'refs/tags/')
+      shell: bash
+      run: |
+        # Extract version from tag (remove 'v' prefix)
+        VERSION=${GITHUB_REF#refs/tags/v}
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "Extracted version: $VERSION"
+
 # CREATE GITHUB RELEASE AND ADD ASSETS
     - id: create-release
       name: Create GitHub release
@@ -69,10 +80,10 @@ jobs:
           See the change history at https://www.schemacrawler.com/changes-report.html
         generate_release_notes: true
         files: |
-          ./schemacrawler-distrib/target/schemacrawler-17.1.8-alpha.1-distribution.zip
-          ./schemacrawler-distrib/target/schemacrawler-17.1.8-alpha.1-distribution.zip.SHA-512
-          ./schemacrawler-distrib/target/schemacrawler-17.1.8-alpha.1-bin.zip
-          ./schemacrawler-distrib/target/schemacrawler-17.1.8-alpha.1-bin.zip.SHA-512
+          ./schemacrawler-distrib/target/schemacrawler-${{ env.VERSION }}-distribution.zip
+          ./schemacrawler-distrib/target/schemacrawler-${{ env.VERSION }}-distribution.zip.SHA-512
+          ./schemacrawler-distrib/target/schemacrawler-${{ env.VERSION }}-bin.zip
+          ./schemacrawler-distrib/target/schemacrawler-${{ env.VERSION }}-bin.zip.SHA-512
 
 # PUBLISH TO CENTRAL REPOSITORY
     - id: publish-to-central
