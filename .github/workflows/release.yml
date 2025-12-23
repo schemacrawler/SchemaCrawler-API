@@ -90,6 +90,7 @@ jobs:
           --no-transfer-progress \
           --batch-mode \
           --projects schemacrawler,schemacrawler-tests-shaded \
+          --also-make \
           -Dmaven.javadoc.skip=false \
           -Dskip.signing.artifacts=false \
           clean deploy
