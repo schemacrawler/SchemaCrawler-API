@@ -1,21 +1,21 @@
 <!-- markdownlint-disable MD041 -->
 **:star: Star it :arrow_heading_up: if you love it!**
 
-[![Quick Build](https://github.com/schemacrawler/SchemaCrawler-API/actions/workflows/quick-build.yml/badge.svg)](https://github.com/schemacrawler/SchemaCrawler-API/actions/workflows/quick-build.yml)
-[![Codacy Grade](https://app.codacy.com/project/badge/Grade/84c0a068ce9349f2bcaa07b5977bd932)](https://app.codacy.com/gh/schemacrawler/SchemaCrawler-API/dashboard)
-[![Codacy Coverage](https://img.shields.io/codacy/coverage/84c0a068ce9349f2bcaa07b5977bd932)](https://app.codacy.com/gh/schemacrawler/SchemaCrawler-API/dashboard)
+[![Quick Build](https://github.com/schemacrawler/SchemaCrawler-Core/actions/workflows/quick-build.yml/badge.svg)](https://github.com/schemacrawler/SchemaCrawler-Core/actions/workflows/quick-build.yml)
+[![Codacy Grade](https://app.codacy.com/project/badge/Grade/84c0a068ce9349f2bcaa07b5977bd932)](https://app.codacy.com/gh/schemacrawler/SchemaCrawler-Core/dashboard)
+[![Codacy Coverage](https://img.shields.io/codacy/coverage/84c0a068ce9349f2bcaa07b5977bd932)](https://app.codacy.com/gh/schemacrawler/SchemaCrawler-Core/dashboard)
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/schemacrawler/schemacrawler?color=FFDAB9)](https://hub.docker.com/r/schemacrawler/schemacrawler/)
 ![GitHub Repo stars](https://img.shields.io/github/stars/schemacrawler/schemacrawler?style=social)
 
-[![The Central Repository](https://img.shields.io/maven-central/v/us.fatehi/schemacrawler)](https://central.sonatype.com/search?q=us.fatehi.schemacrawler&sort=name)
+[![The Central Repository](https://img.shields.io/maven-central/v/us.fatehi/schemacrawler)](https://central.sonatype.com/artifact/us.fatehi/schemacrawler)
 
 
 # <img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler/main/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" valign="middle"/> SchemaCrawler
 
 > [!NOTE]  
 > * Please see the [SchemaCrawler website](https://www.schemacrawler.com/) for more details.
-> * Use the [SchemaCrawler AI MCP Server](https://github.com/schemacrawler/SchemaCrawler-API-MCP-Server-Usage) to get deep insights into your database
+> * Use the [SchemaCrawler AI MCP Server](https://github.com/schemacrawler/SchemaCrawler-AI-MCP-Server-Usage) to get deep insights into your database
 > * Explore the SchemaCrawler command-line with a [live online tutorial](https://killercoda.com/schemacrawler).
 
 ## About

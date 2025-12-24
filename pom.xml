@@ -14,10 +14,10 @@
     <version>17.2.0</version>
     <relativePath>./schemacrawler-parent/pom.xml</relativePath>
   </parent>
-  <artifactId>schemacrawler-api-aggregator</artifactId>
+  <artifactId>schemacrawler-core-aggregator</artifactId>
   <packaging>pom</packaging>
 
-  <name>SchemaCrawler API [Aggregator]</name>
+  <name>SchemaCrawler Core [Aggregator]</name>
 
   <modules>
     <!-- SchemaCrawler common -->

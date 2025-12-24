@@ -1,4 +1,4 @@
-# Instructions for SchemaCrawler API Project
+# Instructions for SchemaCrawler Core Project
 
 ## Project Structure and Build
 - SchemaCrawler is set up as a multi-module **Apache Maven** project.

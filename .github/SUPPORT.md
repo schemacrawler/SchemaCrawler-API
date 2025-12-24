@@ -1,3 +1,3 @@
-# SchemaCrawler API Support
+# SchemaCrawler Core Support
 
 Please review [SchemaCrawler Support and Consulting](https://www.schemacrawler.com/consulting.html).
