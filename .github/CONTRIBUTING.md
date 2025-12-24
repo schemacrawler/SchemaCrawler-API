@@ -1,6 +1,6 @@
-# Contributing to SchemaCrawler API
+# Contributing to SchemaCrawler Core
 
-Thank you for your interest in SchemaCrawler API. At present, I am not accepting pull requests or code contributions while I review copyright and patent considerations.
+Thank you for your interest in SchemaCrawler Core. At present, I am not accepting pull requests or code contributions while I review copyright and patent considerations.
 
 Bug reports and enhancement requests are welcome, and I will address them as promptly as possible.
 
