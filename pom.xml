@@ -11,7 +11,7 @@
   <parent>
     <groupId>us.fatehi</groupId>
     <artifactId>schemacrawler-parent</artifactId>
-    <version>17.1.7-B</version>
+    <version>17.1.7-C</version>
     <relativePath>./schemacrawler-parent/pom.xml</relativePath>
   </parent>
   <artifactId>schemacrawler-api-aggregator</artifactId>
@@ -23,6 +23,7 @@
     <!-- SchemaCrawler common -->
     <module>schemacrawler-parent</module>
     <module>schemacrawler-jdbc-drivers</module>
+		<module>schemacrawler-docs</module>
     <!-- SchemaCrawler test modules -->    
     <module>schemacrawler-testdb</module>
     <module>schemacrawler-test-utility</module>
