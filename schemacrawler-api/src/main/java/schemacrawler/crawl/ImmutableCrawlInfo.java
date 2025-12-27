@@ -17,6 +17,7 @@ import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
 import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
 import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 import static java.time.temporal.ChronoField.YEAR;
+import static java.util.Objects.requireNonNull;
 
 import java.io.Serial;
 import java.time.Instant;
@@ -25,9 +26,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.SignStyle;
 import java.util.UUID;
-
-import static java.util.Objects.requireNonNull;
-
 import schemacrawler.schema.CrawlInfo;
 import schemacrawler.schemacrawler.Version;
 import us.fatehi.utility.property.BaseProductVersion;
@@ -67,8 +65,7 @@ final class ImmutableCrawlInfo implements CrawlInfo {
   private final ProductVersion databaseVersion;
   private final ProductVersion jdbcDriverVersion;
 
-  ImmutableCrawlInfo(
-      final ProductVersion databaseInfo, final ProductVersion jdbcDriverInfo) {
+  ImmutableCrawlInfo(final ProductVersion databaseInfo, final ProductVersion jdbcDriverInfo) {
     requireNonNull(databaseInfo, "No database information provided");
     requireNonNull(jdbcDriverInfo, "No JDBC driver information provided");
 
