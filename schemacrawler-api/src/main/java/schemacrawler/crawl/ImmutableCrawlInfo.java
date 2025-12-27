@@ -17,7 +17,6 @@ import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
 import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
 import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 import static java.time.temporal.ChronoField.YEAR;
-import static java.util.Objects.requireNonNull;
 
 import java.io.Serial;
 import java.time.Instant;
@@ -26,6 +25,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.SignStyle;
 import java.util.UUID;
+
+import static java.util.Objects.requireNonNull;
+
 import schemacrawler.schema.CrawlInfo;
 import schemacrawler.schemacrawler.Version;
 import us.fatehi.utility.property.BaseProductVersion;
@@ -34,7 +36,7 @@ import us.fatehi.utility.property.OperatingSystemInfo;
 import us.fatehi.utility.property.ProductVersion;
 
 /** SchemaCrawler crawl information. */
-final class MutableCrawlInfo implements CrawlInfo {
+final class ImmutableCrawlInfo implements CrawlInfo {
 
   @Serial private static final long serialVersionUID = 5982990326485881993L;
 
@@ -65,8 +67,8 @@ final class MutableCrawlInfo implements CrawlInfo {
   private final ProductVersion databaseVersion;
   private final ProductVersion jdbcDriverVersion;
 
-  MutableCrawlInfo(
-      final MutableDatabaseInfo databaseInfo, final MutableJdbcDriverInfo jdbcDriverInfo) {
+  ImmutableCrawlInfo(
+      final ProductVersion databaseInfo, final ProductVersion jdbcDriverInfo) {
     requireNonNull(databaseInfo, "No database information provided");
     requireNonNull(jdbcDriverInfo, "No JDBC driver information provided");
 
