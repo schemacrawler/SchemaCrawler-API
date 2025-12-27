@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "EditorConfig.EditorConfig",
+    "vscjava.vscode-java-pack"
+  ],
+  "unwantedRecommendations": []
+}

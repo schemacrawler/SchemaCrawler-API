@@ -18,52 +18,21 @@
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-utility</artifactId>
       <version>${project.version}</version>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-api</artifactId>
       <version>${project.version}</version>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-tools</artifactId>
       <version>${project.version}</version>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-loader</artifactId>
       <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-testdb</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-test-utility</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-api</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-tools</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
     </dependency>
 
   </dependencies>
@@ -80,12 +49,12 @@
               <goal>jar</goal>
             </goals>
             <configuration>
-              <shadedArtifactAttached>false</shadedArtifactAttached>
-              <createDependencyReducedPom>true</createDependencyReducedPom>
               <includeDependencySources>true</includeDependencySources>
               <dependencySourceIncludes>
+                <dependencySourceInclude>us.fatehi:schemacrawler-utility</dependencySourceInclude>
                 <dependencySourceInclude>us.fatehi:schemacrawler-api</dependencySourceInclude>
                 <dependencySourceInclude>us.fatehi:schemacrawler-tools</dependencySourceInclude>
+                <dependencySourceInclude>us.fatehi:schemacrawler-loader</dependencySourceInclude>
               </dependencySourceIncludes>
               <quiet>true</quiet>
               <show>public</show>
@@ -94,7 +63,7 @@
                 <additionalOption>-Xdoclint:none</additionalOption>
               </additionalOptions>
               <bottom>Copyright © 2000-2026 {organizationName}. All rights reserved.</bottom>
-              <doctitle>SchemaCrawler ${project.version}</doctitle>
+              <doctitle>SchemaCrawler Core ${project.version}</doctitle>
               <skip>false</skip>
             </configuration>
           </execution>
@@ -110,6 +79,9 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <createDependencyReducedPom>true</createDependencyReducedPom>
+              <createSourcesJar>true</createSourcesJar>
+              <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
               <artifactSet>
                 <includes>
                   <include>us.fatehi:schemacrawler-utility</include>
@@ -118,7 +90,6 @@
                   <include>us.fatehi:schemacrawler-loader</include>
                 </includes>
               </artifactSet>
-              <createSourcesJar>true</createSourcesJar>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                 <transformer

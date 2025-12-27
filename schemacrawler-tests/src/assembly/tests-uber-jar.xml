@@ -1,0 +1,31 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3
+                              https://maven.apache.org/xsd/assembly-1.1.3.xsd">
+  <id>tests</id>
+
+  <formats>
+    <format>jar</format>
+  </formats>
+
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <dependencySets>
+    <dependencySet>
+      <!-- Unpack dependencies into the root of the JAR -->
+      <outputDirectory>/</outputDirectory>
+      <unpack>true</unpack>
+
+      <includes>
+        <!-- equivalent to artifactSet/includes -->
+        <include>us.fatehi:schemacrawler-test-utility</include>
+        <include>us.fatehi:schemacrawler-api:test-jar</include>
+        <include>us.fatehi:schemacrawler-tools:test-jar</include>
+        <include>us.fatehi:schemacrawler-loader:test-jar</include>
+      </includes>
+
+      <!-- usually what you want for an uber‑jar -->
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+    </dependencySet>
+  </dependencySets>
+</assembly>
