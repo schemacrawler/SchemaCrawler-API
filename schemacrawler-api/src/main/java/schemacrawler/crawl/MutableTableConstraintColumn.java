@@ -15,7 +15,7 @@ import schemacrawler.schema.TableConstraintColumn;
 
 final class MutableTableConstraintColumn extends MutableKeyColumn implements TableConstraintColumn {
 
-  @Serial private static final long serialVersionUID = -6923211341742623556L;
+  @Serial private static final long serialVersionUID = 8279216938257887408L;
 
   private final TableConstraint tableConstraint;
 
