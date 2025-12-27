@@ -15,11 +15,15 @@
 
   <dependencies>
 
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-test-utility</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+    <!-- IMPORTANT:
+      1. Do not include `schemacrawler-test-utility` in the uber-jar, since
+         it defines third-party test jars, and otherwise jas just common test
+         utilities for SchemaCrawler.
+      2. The flattened POM does not include any dependencies at all, since if
+         it did, it would pull in the code for the sub-modules that are built
+         into the main SchemaCrawler under-jar individually.
+    -->
+
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-api</artifactId>
@@ -38,6 +42,7 @@
       <version>${project.version}</version>
       <type>test-jar</type>
     </dependency>
+
   </dependencies>
 
   <build>
@@ -74,10 +79,11 @@
               <goal>flatten</goal>
             </goals>
             <configuration>
-              <flattenMode>ossrh</flattenMode>
+              <flattenMode>fatjar</flattenMode>
               <pomElements>
                 <dependencies>remove</dependencies>
               </pomElements>
+              <updatePomFile>true</updatePomFile>
             </configuration>
           </execution>
           <execution>
