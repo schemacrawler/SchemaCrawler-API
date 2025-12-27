@@ -57,10 +57,10 @@ final class ImmutableCrawlInfo implements CrawlInfo {
             .toFormatter();
   }
 
+  private final UUID runId;
   private final Instant crawlTimestamp;
   private final ProductVersion jvmVersion;
   private final ProductVersion operatingSystemVersion;
-  private final UUID runId;
   private final ProductVersion schemaCrawlerVersion;
   private final ProductVersion databaseVersion;
   private final ProductVersion jdbcDriverVersion;
