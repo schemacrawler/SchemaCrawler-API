@@ -15,12 +15,10 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.fail;
+import static schemacrawler.testdb.IOUtility.newResourceReader;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -114,10 +112,7 @@ public class DatabaseScriptsTest {
     final List<String> failedScripts = new ArrayList<>();
     for (final String scriptName : scripts) {
       final Map<DatabaseScriptSection, Integer> scriptSectionsCounts = makeScriptSectionsCounts();
-      try (final InputStream inputStream =
-              Thread.currentThread().getContextClassLoader().getResourceAsStream(scriptName);
-          final BufferedReader reader =
-              new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+      try (final BufferedReader reader = newResourceReader(scriptName)) {
         final List<String> lines =
             reader
                 .lines()

@@ -9,11 +9,12 @@
 package us.fatehi.test.utility.extensions;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static us.fatehi.test.utility.IOUtility.newResourceInputStream;
+import static us.fatehi.test.utility.IOUtility.newResourceReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -76,12 +77,9 @@ public final class ResultsResource {
   public boolean isAvailable() {
     switch (resourceType) {
       case classpath:
-        final String normalized =
-            resourceString.startsWith("/") ? resourceString.substring(1) : resourceString;
-        try (final InputStream in =
-            Thread.currentThread().getContextClassLoader().getResourceAsStream(normalized)) {
+        try (final InputStream in = newResourceInputStream(resourceString)) {
           return in != null;
-        } catch (final IOException e) {
+        } catch (final Exception e) {
           return false;
         }
 
@@ -106,16 +104,7 @@ public final class ResultsResource {
     try {
       switch (resourceType) {
         case classpath:
-          {
-            final String normalized =
-                resourceString.startsWith("/") ? resourceString.substring(1) : resourceString;
-            final InputStream in =
-                Thread.currentThread().getContextClassLoader().getResourceAsStream(normalized);
-            if (in != null) {
-              return new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            }
-            return new BufferedReader(new StringReader(""));
-          }
+          return newResourceReader(resourceString);
         case file:
           {
             final Path path = Path.of(resourceString);
@@ -125,7 +114,7 @@ public final class ResultsResource {
         default:
           return new BufferedReader(new StringReader(""));
       }
-    } catch (final IOException e) {
+    } catch (final Exception e) {
       return new BufferedReader(new StringReader(""));
     }
   }

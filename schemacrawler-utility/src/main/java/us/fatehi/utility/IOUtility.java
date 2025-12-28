@@ -141,23 +141,44 @@ public final class IOUtility {
   }
 
   /**
-   * Locates the resource bases on the current thread's classloader. Always assumes that resources
-   * are absolute.
+   * Locates the resource based on the current thread's classloader. Always assumes that resources
+   * are absolute. When running on the module path, this method tries multiple strategies to locate
+   * the resource.
    *
+   * @param classpathResource The classpath resource to locate
    * @return URL for the located resource, or null if not found
    */
   public static URL locateResource(final String classpathResource) {
     if (isBlank(classpathResource)) {
       return null;
     }
-    final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     final String resolvedClasspathResource;
     if (classpathResource.startsWith("/")) {
       resolvedClasspathResource = classpathResource.substring(1);
     } else {
       resolvedClasspathResource = classpathResource;
     }
-    return classLoader.getResource(resolvedClasspathResource);
+
+    // Try context classloader first (works for classpath-based execution)
+    final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+    if (contextClassLoader != null) {
+      final URL url = contextClassLoader.getResource(resolvedClasspathResource);
+      if (url != null) {
+        return url;
+      }
+    }
+
+    // Try the classloader that loaded this class (works for module path)
+    final ClassLoader classClassLoader = IOUtility.class.getClassLoader();
+    if (classClassLoader != null) {
+      final URL url = classClassLoader.getResource(resolvedClasspathResource);
+      if (url != null) {
+        return url;
+      }
+    }
+
+    // Try using Class.getResource with absolute path (module-aware)
+    return IOUtility.class.getResource("/" + resolvedClasspathResource);
   }
 
   /**

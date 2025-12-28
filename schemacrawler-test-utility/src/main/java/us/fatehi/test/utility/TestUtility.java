@@ -15,6 +15,7 @@ import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static java.nio.file.StandardOpenOption.WRITE;
 import static java.util.Objects.requireNonNull;
+import static us.fatehi.test.utility.IOUtility.newResourceInputStream;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -48,9 +49,8 @@ public final class TestUtility {
     // Normalize resource name: remove leading slash if present
     final String normalized = resource.startsWith("/") ? resource.substring(1) : resource;
 
-    // Try to load resource from classpath
-    try (InputStream in =
-        Thread.currentThread().getContextClassLoader().getResourceAsStream(normalized)) {
+    // Try to load resource from classpath using module-aware method
+    try (InputStream in = newResourceInputStream(resource)) {
       if (in == null) {
         return null; // Resource not found
       }
@@ -61,7 +61,7 @@ public final class TestUtility {
       final Path tempFile = Files.createTempFile("resource-", suffix);
       Files.copy(in, tempFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
       return tempFile;
-    } catch (final IOException e) {
+    } catch (final Exception e) {
       return null; // Any I/O error results in null
     }
   }
@@ -113,15 +113,12 @@ public final class TestUtility {
   public static Properties loadPropertiesFromClasspath(final String resource) {
     final Properties props = new Properties();
 
-    // Normalize resource name: remove leading slash if present
-    final String normalized = resource.startsWith("/") ? resource.substring(1) : resource;
-
-    try (InputStream in =
-        Thread.currentThread().getContextClassLoader().getResourceAsStream(normalized)) {
+    // Try to load resource from classpath using module-aware method
+    try (InputStream in = newResourceInputStream(resource)) {
       if (in != null) {
         props.load(in);
       }
-    } catch (final IOException e) {
+    } catch (final Exception e) {
       // Ignore and return empty properties
     }
 
