@@ -11,7 +11,6 @@ package us.fatehi.utility;
 /**
  * Convoluted interface to allow for subclasses builders, while maintaining a fluent interface.
  *
- * @param <B> Builder
  * @param <O> Options to be built
  * @see <a href=
  *     "https://stackoverflow.com/questions/17164375/subclassing-a-java-builder-class">Subclassing a

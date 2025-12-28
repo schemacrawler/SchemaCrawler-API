@@ -16,7 +16,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import schemacrawler.testdb.TestDatabase;
 
 @TestInstance(Lifecycle.PER_CLASS)
-public class TestSchemaCreator {
+public class TestSchemaCreatorTest {
 
   private TestDatabase testDatabase;
 

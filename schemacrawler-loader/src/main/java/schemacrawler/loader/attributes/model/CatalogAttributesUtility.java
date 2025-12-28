@@ -24,9 +24,9 @@ public class CatalogAttributesUtility {
   private static final ObjectMapper mapper = new YAMLMapper();
 
   /**
-   * Pass in a reader at this point, since
+   * Read catalog attributes.
    *
-   * @param catalogAttributesFile
+   * @param inputResource Input resource for catalog attributes.
    */
   public static CatalogAttributes readCatalogAttributes(final InputResource inputResource) {
     requireNonNull(inputResource, "No input resource provided");

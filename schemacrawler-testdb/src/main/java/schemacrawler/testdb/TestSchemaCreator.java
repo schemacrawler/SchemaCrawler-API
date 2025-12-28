@@ -9,12 +9,10 @@
 package schemacrawler.testdb;
 
 import static java.util.Objects.requireNonNull;
+import static schemacrawler.testdb.IOUtility.newResourceReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -50,7 +48,7 @@ public class TestSchemaCreator implements Runnable {
       return;
     }
 
-    try (final BufferedReader scriptReader = newClasspathReader(scriptResource)) {
+    try (final BufferedReader scriptReader = newResourceReader(scriptResource)) {
       executeSqlScript(connection, scriptReader, delimiter);
     } catch (final IOException | SQLException e) {
       throw new RuntimeException("Could not read \"%s\"".formatted(scriptResource), e);
@@ -84,25 +82,6 @@ public class TestSchemaCreator implements Runnable {
     }
   }
 
-  private static BufferedReader newClasspathReader(final String classpathResource) {
-    if (classpathResource == null || classpathResource.isBlank()) {
-      throw new IllegalArgumentException("Classpath resource not provided");
-    }
-
-    final String resource;
-    if (classpathResource.startsWith("/")) {
-      resource = classpathResource.substring(1);
-    } else {
-      resource = classpathResource;
-    }
-
-    final InputStream inputStream =
-        Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-    final BufferedReader reader =
-        new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-    return reader;
-  }
-
   private final Connection connection;
   private final String scriptsResource;
 
@@ -114,7 +93,7 @@ public class TestSchemaCreator implements Runnable {
 
   @Override
   public void run() {
-    try (final BufferedReader reader = newClasspathReader(scriptsResource)) {
+    try (final BufferedReader reader = newResourceReader(scriptsResource)) {
       reader.lines().forEach(line -> executeScriptLine(line, connection));
     } catch (final IOException e) {
       throw new RuntimeException(e.getMessage(), e);

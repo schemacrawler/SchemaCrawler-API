@@ -31,8 +31,9 @@ public interface EnvironmentVariableConfig extends ReadConfig {
   /**
    * Gets the value of the specified environment variable.
    *
-   * @param name the name of the environment variable
-   * @return the string value of the variable, or null if the variable is not defined
+   * @param propertyName the name of the environment variable
+   * @param defaultValue Default value for the property
+   * @return The string value of the variable, or null if the variable is not defined
    */
   @Override
   default String getStringValue(final String propertyName, final String defaultValue) {
