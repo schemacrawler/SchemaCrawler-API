@@ -25,10 +25,11 @@ public interface ReadConfig {
   }
 
   /**
-   * Gets the value of the specified key.
+   * Gets the value of the specified environment variable.
    *
-   * @param name the name of the key
-   * @return String value of the key, or null if the key is not defined
+   * @param propertyName the name of the environment variable
+   * @param defaultValue Default value for the property
+   * @return The string value of the variable, or null if the variable is not defined
    */
   String getStringValue(String propertyName, String defaultValue);
 }

@@ -18,9 +18,9 @@ import us.fatehi.utility.UtilityMarker;
 public final class ConfigUtility {
 
   /**
-   * Create config copied from another config.
+   * Create `Config` copied from another `Config`.
    *
-   * @param map Provided config
+   * @param config Provided `Config`
    */
   public static Config fromConfig(final Config config) {
     final Config newConfig = newConfig();
@@ -31,9 +31,9 @@ public final class ConfigUtility {
   }
 
   /**
-   * Create config from map.
+   * Create `Config` from map.
    *
-   * @param map Provided map for config
+   * @param map Provided map for `Config`
    */
   public static Config fromMap(final Map<String, ? extends Object> map) {
     final Map<String, ? extends Object> filteredMap = PropertiesUtility.filterMap(map);
@@ -41,9 +41,9 @@ public final class ConfigUtility {
   }
 
   /**
-   * Create config from properties.
+   * Create `Config` from properties.
    *
-   * @param properties Provided properties for config
+   * @param properties Provided properties for `Config`
    */
   public static Config fromProperties(final Properties properties) {
     final Map<String, ? extends Object> filteredMap = PropertiesUtility.filterMap(properties);
@@ -51,9 +51,9 @@ public final class ConfigUtility {
   }
 
   /**
-   * Creates a new empty config.
+   * Creates a new empty `Config`.
    *
-   * @return New config
+   * @return New `Config`
    */
   public static Config newConfig() {
     return fromMap(Collections.emptyMap());
