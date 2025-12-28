@@ -8,8 +8,10 @@
 
 package schemacrawler.test.utility.crawl;
 
+import static java.util.Objects.requireNonNull;
 import static schemacrawler.test.utility.crawl.LightColumnDataTypeFactory.columnDataType;
 import static schemacrawler.test.utility.crawl.LightColumnDataTypeFactory.enumColumnDataType;
+import static us.fatehi.utility.Utility.requireNotBlank;
 
 import java.io.Serial;
 import java.util.Collection;
@@ -18,11 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
-
-import static us.fatehi.utility.Utility.requireNotBlank;
-
 import schemacrawler.schema.Column;
 import schemacrawler.schema.ColumnDataType;
 import schemacrawler.schema.Identifiers;
