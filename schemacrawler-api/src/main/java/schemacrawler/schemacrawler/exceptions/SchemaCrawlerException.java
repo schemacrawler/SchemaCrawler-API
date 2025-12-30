@@ -12,7 +12,7 @@ import static schemacrawler.utility.ExceptionUtility.makeExceptionMessage;
 
 import java.io.Serial;
 
-public class SchemaCrawlerException extends RuntimeException {
+public abstract class SchemaCrawlerException extends RuntimeException {
 
   @Serial private static final long serialVersionUID = 3257848770627713076L;
 

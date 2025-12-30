@@ -31,7 +31,6 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaRetrievalOptions;
 import schemacrawler.schemacrawler.SchemaRetrievalOptionsBuilder;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
-import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import schemacrawler.test.utility.ExecutableTestUtility;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.executable.SchemaCrawlerExecutable;
@@ -96,8 +95,8 @@ public class SchemaCrawlerExecutableTest {
     final Config config = ConfigUtility.newConfig();
     config.put("return-null", true);
     executable2.setAdditionalConfiguration(config);
-    final InternalRuntimeException ex2 =
-        assertThrows(InternalRuntimeException.class, () -> executable2.execute());
+    final ExecutionRuntimeException ex2 =
+        assertThrows(ExecutionRuntimeException.class, () -> executable2.execute());
     assertThat(ex2.getMessage(), is("Cannot run command <" + command2 + ">"));
   }
 

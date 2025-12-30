@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
+import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.executable.commandline.PluginCommand;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.OutputOptions;
@@ -111,22 +112,23 @@ public final class CommandRegistry extends BasePluginRegistry implements PluginC
     final CommandProvider executableCommandProvider = executableCommandProviders.get(0);
     LOGGER.log(Level.INFO, new StringFormat("Matched provider <%s>", executableCommandProvider));
 
+    final String errorMessage = "Cannot run command <%s>".formatted(command);
     final SchemaCrawlerCommand<?> scCommand;
     try {
       scCommand = executableCommandProvider.newSchemaCrawlerCommand(command, additionalConfig);
       if (scCommand == null) {
-        throw new NullPointerException("No SchemaCrawler command instantiated");
+        throw new ExecutionRuntimeException("No SchemaCrawler command instantiated");
       }
       scCommand.setSchemaCrawlerOptions(schemaCrawlerOptions);
       scCommand.setOutputOptions(outputOptions);
-    } catch (final ExecutionRuntimeException e) {
+    } catch (final SchemaCrawlerException e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
-      throw e;
+      throw new ExecutionRuntimeException(errorMessage, e);
     } catch (final Throwable e) {
-      // Mainly catch NoClassDefFoundError, which is a Throwable, for
-      // missing third-party jars
+      // Mainly catch NoClassDefFoundError, which is a Throwable,
+      // for missing third-party jars
       LOGGER.log(Level.CONFIG, e.getMessage(), e);
-      throw new InternalRuntimeException("Cannot run command <%s>".formatted(command));
+      throw new InternalRuntimeException(errorMessage);
     }
 
     return scCommand;

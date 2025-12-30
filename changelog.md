@@ -2,6 +2,13 @@
 
 SchemaCrawler Core release notes.
 
+<a name="v17.2.8"></a>
+## Release 17.2.8 - 2025-12-30
+
+- Allow reflection on schema model classes
+- Clean up style issues
+
+
 <a name="v17.2.7"></a>
 ## Release 17.2.7 - 2025-12-29
 
