@@ -48,21 +48,6 @@ module us.fatehi.schemacrawler.schemacrawler {
   exports schemacrawler.loader.counts;
   exports schemacrawler.loader.weakassociations;
 
-  // Export public API packages from schemacrawler-text
-  exports schemacrawler.tools.command.text.schema;
-  exports schemacrawler.tools.command.text.schema.options;
-  exports schemacrawler.tools.text.formatter.base;
-  exports schemacrawler.tools.text.formatter.base.helper;
-  exports schemacrawler.tools.text.formatter.schema;
-  exports schemacrawler.tools.text.options;
-  exports schemacrawler.tools.traversal;
-
-  // Export public API packages from schemacrawler-diagram
-  exports schemacrawler.tools.command.text.diagram;
-  exports schemacrawler.tools.command.text.diagram.options;
-  exports schemacrawler.tools.command.text.embeddeddiagram;
-  exports schemacrawler.tools.text.formatter.diagram;
-
   // ServiceLoader providers
   uses java.sql.Driver;
   uses schemacrawler.tools.catalogloader.CatalogLoader;
