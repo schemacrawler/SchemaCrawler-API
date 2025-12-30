@@ -6,11 +6,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-package schemacrawler.schemacrawler;
+package schemacrawler.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -18,6 +17,9 @@ import static org.mockito.Mockito.mock;
 import java.sql.Connection;
 import java.util.function.BiConsumer;
 import org.junit.jupiter.api.Test;
+import schemacrawler.schemacrawler.InformationSchemaKey;
+import schemacrawler.schemacrawler.InformationSchemaViews;
+import schemacrawler.schemacrawler.InformationSchemaViewsBuilder;
 
 public class InformationSchemaViewsBuilderTest {
 
@@ -85,17 +87,11 @@ public class InformationSchemaViewsBuilderTest {
     builder.substituteAll("key", "value");
 
     assertThat(
-        builder
-            .toOptions()
-            .getAllInformationSchemaViews()
-            .get(InformationSchemaKey.ADDITIONAL_COLUMN_ATTRIBUTES),
+        builder.toOptions().getQuery(InformationSchemaKey.ADDITIONAL_COLUMN_ATTRIBUTES).query(),
         is(sql));
 
     assertThat(
-        builder
-            .toOptions()
-            .getAllInformationSchemaViews()
-            .get(InformationSchemaKey.ADDITIONAL_TABLE_ATTRIBUTES),
+        builder.toOptions().getQuery(InformationSchemaKey.ADDITIONAL_TABLE_ATTRIBUTES).query(),
         is("SOME value SUBSTITUTE SQL SELECT"));
   }
 
@@ -125,19 +121,12 @@ public class InformationSchemaViewsBuilderTest {
     builder.withSql(InformationSchemaKey.ADDITIONAL_COLUMN_ATTRIBUTES, sql);
 
     assertThat(
-        builder
-            .toOptions()
-            .getAllInformationSchemaViews()
-            .get(InformationSchemaKey.ADDITIONAL_COLUMN_ATTRIBUTES),
+        builder.toOptions().getQuery(InformationSchemaKey.ADDITIONAL_COLUMN_ATTRIBUTES).query(),
         is(sql));
 
     builder.withSql(InformationSchemaKey.ADDITIONAL_COLUMN_ATTRIBUTES, null);
 
     assertThat(
-        builder
-            .toOptions()
-            .getAllInformationSchemaViews()
-            .get(InformationSchemaKey.ADDITIONAL_COLUMN_ATTRIBUTES),
-        is(nullValue()));
+        builder.toOptions().hasQuery(InformationSchemaKey.ADDITIONAL_COLUMN_ATTRIBUTES), is(false));
   }
 }

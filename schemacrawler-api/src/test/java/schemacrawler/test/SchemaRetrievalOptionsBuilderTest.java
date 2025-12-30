@@ -6,11 +6,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-package schemacrawler.schemacrawler;
+package schemacrawler.test;
 
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresent;
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresentAndIs;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
@@ -31,6 +28,13 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import schemacrawler.plugin.EnumDataTypeInfo;
 import schemacrawler.plugin.EnumDataTypeInfo.EnumDataTypeTypes;
+import schemacrawler.schemacrawler.InformationSchemaKey;
+import schemacrawler.schemacrawler.InformationSchemaViews;
+import schemacrawler.schemacrawler.InformationSchemaViewsBuilder;
+import schemacrawler.schemacrawler.MetadataRetrievalStrategy;
+import schemacrawler.schemacrawler.SchemaInfoMetadataRetrievalStrategy;
+import schemacrawler.schemacrawler.SchemaRetrievalOptions;
+import schemacrawler.schemacrawler.SchemaRetrievalOptionsBuilder;
 import us.fatehi.utility.datasource.DatabaseServerType;
 
 public class SchemaRetrievalOptionsBuilderTest {
@@ -41,20 +45,24 @@ public class SchemaRetrievalOptionsBuilderTest {
 
     final SchemaRetrievalOptionsBuilder builder = SchemaRetrievalOptionsBuilder.builder();
 
-    builder.connectionInitializer.accept(connection);
+    final SchemaRetrievalOptions defaultSchemaRetrievalOptions = builder.toOptions();
+    defaultSchemaRetrievalOptions.getConnectionInitializer().accept(connection);
     verifyNoInteractions(connection);
 
     builder.withConnectionInitializer(
         conn -> {
           throw new RuntimeException("Test forced exception");
         });
+    final SchemaRetrievalOptions throwingOptions = builder.toOptions();
     final RuntimeException runtimeException1 =
         assertThrows(
-            RuntimeException.class, () -> builder.connectionInitializer.accept(connection));
+            RuntimeException.class,
+            () -> throwingOptions.getConnectionInitializer().accept(connection));
     assertThat(runtimeException1.getMessage(), is("Test forced exception"));
 
     builder.withConnectionInitializer(null);
-    builder.connectionInitializer.accept(connection);
+    final SchemaRetrievalOptions resetOptions = builder.toOptions();
+    resetOptions.getConnectionInitializer().accept(connection);
     verifyNoInteractions(connection);
   }
 
@@ -72,15 +80,18 @@ public class SchemaRetrievalOptionsBuilderTest {
     SchemaRetrievalOptionsBuilder builder;
 
     builder = SchemaRetrievalOptionsBuilder.builder();
-    assertThat(builder.supportsCatalogs, is(true));
-    assertThat(builder.supportsSchemas, is(true));
-    assertThat(builder.overridesTypeMap, isEmpty());
-    assertThat(builder.identifierQuoteString, is(""));
+    final SchemaRetrievalOptions defaultSchemaRetrievalOptions = builder.toOptions();
+    assertThat(defaultSchemaRetrievalOptions.isSupportsCatalogs(), is(true));
+    assertThat(defaultSchemaRetrievalOptions.isSupportsSchemas(), is(true));
+    assertThat(defaultSchemaRetrievalOptions.getTypeMap(), is(aMapWithSize(39)));
+    assertThat(defaultSchemaRetrievalOptions.getIdentifierQuoteString(), is(""));
+
     builder.fromConnnection(connection);
-    assertThat(builder.supportsCatalogs, is(false));
-    assertThat(builder.supportsSchemas, is(true));
-    assertThat(builder.overridesTypeMap, isPresent());
-    assertThat(builder.identifierQuoteString, is("@"));
+    final SchemaRetrievalOptions schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsCatalogs(), is(false));
+    assertThat(schemaRetrievalOptions.isSupportsSchemas(), is(true));
+    assertThat(schemaRetrievalOptions.getTypeMap(), is(aMapWithSize(39)));
+    assertThat(schemaRetrievalOptions.getIdentifierQuoteString(), is("@"));
   }
 
   @Test
@@ -89,25 +100,26 @@ public class SchemaRetrievalOptionsBuilderTest {
     SchemaRetrievalOptionsBuilder builder;
 
     builder = SchemaRetrievalOptionsBuilder.builder();
-    assertThat(builder.supportsCatalogs, is(true));
-    assertThat(builder.supportsSchemas, is(true));
-    assertThat(builder.overridesTypeMap, isEmpty());
+    SchemaRetrievalOptions schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsCatalogs(), is(true));
+    assertThat(schemaRetrievalOptions.isSupportsSchemas(), is(true));
+    assertThat(schemaRetrievalOptions.getTypeMap(), is(aMapWithSize(39)));
     builder.fromConnnection(null);
-    assertThat(builder.supportsCatalogs, is(true));
-    assertThat(builder.supportsSchemas, is(true));
-    assertThat(builder.overridesTypeMap, isEmpty());
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsCatalogs(), is(true));
+    assertThat(schemaRetrievalOptions.isSupportsSchemas(), is(true));
+    assertThat(schemaRetrievalOptions.getTypeMap(), is(aMapWithSize(39)));
 
     final Connection connection = mock(Connection.class);
     when(connection.getMetaData()).thenThrow(SQLException.class);
 
     builder = SchemaRetrievalOptionsBuilder.builder();
-    assertThat(builder.supportsCatalogs, is(true));
-    assertThat(builder.supportsSchemas, is(true));
-    assertThat(builder.overridesTypeMap, isEmpty());
     builder.fromConnnection(connection);
-    assertThat(builder.supportsCatalogs, is(true));
-    assertThat(builder.supportsSchemas, is(true));
-    assertThat(builder.overridesTypeMap, isPresent());
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsCatalogs(), is(true));
+    assertThat(schemaRetrievalOptions.isSupportsSchemas(), is(true));
+    assertThat(schemaRetrievalOptions.getTypeMap(), is(aMapWithSize(39)));
+    assertThat(schemaRetrievalOptions.getIdentifierQuoteString(), is("\""));
   }
 
   @Test
@@ -128,43 +140,47 @@ public class SchemaRetrievalOptionsBuilderTest {
     builder.withSupportsSchemas();
     builder.withIdentifierQuoteString("@");
 
-    assertThat(builder.supportsCatalogs, is(true));
-    assertThat(builder.overridesSupportsCatalogs, isPresentAndIs(true));
-    assertThat(builder.supportsSchemas, is(true));
-    assertThat(builder.overridesSupportsSchemas, isPresentAndIs(true));
-    assertThat(builder.overridesTypeMap, isEmpty());
-    assertThat(builder.identifierQuoteString, is("@"));
+    SchemaRetrievalOptions schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsCatalogs(), is(true));
+    assertThat(schemaRetrievalOptions.isSupportsSchemas(), is(true));
+    assertThat(schemaRetrievalOptions.getIdentifierQuoteString(), is("@"));
     builder.fromConnnection(connection);
-    assertThat(builder.supportsCatalogs, is(true));
-    assertThat(builder.overridesSupportsCatalogs, isPresentAndIs(true));
-    assertThat(builder.supportsSchemas, is(true));
-    assertThat(builder.overridesSupportsSchemas, isPresentAndIs(true));
-    assertThat(builder.overridesTypeMap, isPresent());
-    assertThat(builder.identifierQuoteString, is("@"));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsCatalogs(), is(true));
+    assertThat(schemaRetrievalOptions.isSupportsSchemas(), is(true));
+    assertThat(schemaRetrievalOptions.getTypeMap(), is(aMapWithSize(39)));
+    assertThat(schemaRetrievalOptions.getIdentifierQuoteString(), is("@"));
 
     builder = SchemaRetrievalOptionsBuilder.builder();
     builder.withTypeMap(new HashMap<>());
-    assertThat(builder.overridesTypeMap, isPresent());
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getTypeMap(), is(aMapWithSize(0)));
     builder.fromConnnection(connection);
-    assertThat(builder.overridesTypeMap, isPresent());
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getTypeMap(), is(aMapWithSize(0)));
 
     when(dbMetaData.getIdentifierQuoteString()).thenReturn("\t");
     builder = SchemaRetrievalOptionsBuilder.builder();
     builder.fromConnnection(connection);
-    assertThat(builder.identifierQuoteString, is(""));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getIdentifierQuoteString(), is(""));
   }
 
   @Test
   public void dbServerType() {
     final SchemaRetrievalOptionsBuilder builder = SchemaRetrievalOptionsBuilder.builder();
 
-    assertThat(builder.dbServerType, is(DatabaseServerType.UNKNOWN));
+    SchemaRetrievalOptions schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getDatabaseServerType(), is(DatabaseServerType.UNKNOWN));
 
     builder.withDatabaseServerType(new DatabaseServerType("newdb", "New Database"));
-    assertThat(builder.dbServerType.getDatabaseSystemIdentifier(), is("newdb"));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(
+        schemaRetrievalOptions.getDatabaseServerType().getDatabaseSystemIdentifier(), is("newdb"));
 
     builder.withDatabaseServerType(null);
-    assertThat(builder.dbServerType, is(DatabaseServerType.UNKNOWN));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getDatabaseServerType(), is(DatabaseServerType.UNKNOWN));
   }
 
   @Test
@@ -172,19 +188,19 @@ public class SchemaRetrievalOptionsBuilderTest {
     final SchemaRetrievalOptionsBuilder builder = SchemaRetrievalOptionsBuilder.builder();
 
     assertThat(
-        builder.enumDataTypeHelper.getEnumDataTypeInfo(null, null, null).getType(),
+        builder.toOptions().getEnumDataTypeHelper().getEnumDataTypeInfo(null, null, null).getType(),
         is(EnumDataTypeInfo.EnumDataTypeTypes.not_enumerated));
 
     builder.withEnumDataTypeHelper(
         (column, columnDataType, connection) ->
             new EnumDataTypeInfo(EnumDataTypeTypes.enumerated_column, emptyList()));
     assertThat(
-        builder.enumDataTypeHelper.getEnumDataTypeInfo(null, null, null).getType(),
+        builder.toOptions().getEnumDataTypeHelper().getEnumDataTypeInfo(null, null, null).getType(),
         is(EnumDataTypeInfo.EnumDataTypeTypes.enumerated_column));
 
     builder.withEnumDataTypeHelper(null);
     assertThat(
-        builder.enumDataTypeHelper.getEnumDataTypeInfo(null, null, null).getType(),
+        builder.toOptions().getEnumDataTypeHelper().getEnumDataTypeInfo(null, null, null).getType(),
         is(EnumDataTypeInfo.EnumDataTypeTypes.not_enumerated));
   }
 
@@ -193,37 +209,44 @@ public class SchemaRetrievalOptionsBuilderTest {
     final SchemaRetrievalOptions options =
         SchemaRetrievalOptionsBuilder.newSchemaRetrievalOptions();
     final SchemaRetrievalOptionsBuilder builder = SchemaRetrievalOptionsBuilder.builder(options);
-    assertThat(builder.supportsCatalogs, is(true));
-    assertThat(builder.supportsSchemas, is(true));
-    assertThat(builder.overridesTypeMap, isEmpty());
+    final SchemaRetrievalOptions schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsCatalogs(), is(true));
+    assertThat(schemaRetrievalOptions.isSupportsSchemas(), is(true));
+    assertThat(schemaRetrievalOptions.getTypeMap(), is(aMapWithSize(39)));
   }
 
   @Test
   public void fromOptions_null() {
     final SchemaRetrievalOptionsBuilder builder =
         SchemaRetrievalOptionsBuilder.builder().fromOptions(null);
-    assertThat(builder.supportsCatalogs, is(true));
-    assertThat(builder.supportsSchemas, is(true));
-    assertThat(builder.overridesTypeMap, isEmpty());
+    final SchemaRetrievalOptions schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsCatalogs(), is(true));
+    assertThat(schemaRetrievalOptions.isSupportsSchemas(), is(true));
+    assertThat(schemaRetrievalOptions.getTypeMap(), is(aMapWithSize(39)));
   }
 
   @Test
   public void identifierQuoteString() {
     final SchemaRetrievalOptionsBuilder builder = SchemaRetrievalOptionsBuilder.builder();
 
-    assertThat(builder.identifierQuoteString, is(""));
+    SchemaRetrievalOptions schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getIdentifierQuoteString(), is(""));
 
     builder.withIdentifierQuoteString("@");
-    assertThat(builder.identifierQuoteString, is("@"));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getIdentifierQuoteString(), is("@"));
 
     builder.withoutIdentifierQuoteString();
-    assertThat(builder.identifierQuoteString, is(""));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getIdentifierQuoteString(), is(""));
 
     builder.withIdentifierQuoteString(null);
-    assertThat(builder.identifierQuoteString, is(""));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getIdentifierQuoteString(), is(""));
 
     builder.withIdentifierQuoteString("\t");
-    assertThat(builder.identifierQuoteString, is(""));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getIdentifierQuoteString(), is(""));
   }
 
   @Test
@@ -236,13 +259,21 @@ public class SchemaRetrievalOptionsBuilderTest {
 
     final SchemaRetrievalOptionsBuilder builder = SchemaRetrievalOptionsBuilder.builder();
 
-    assertThat(builder.getInformationSchemaViews().isEmpty(), is(true));
+    SchemaRetrievalOptions schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getInformationSchemaViews().isEmpty(), is(true));
 
     builder.withInformationSchemaViews(informationSchemaViews);
-    assertThat(builder.getInformationSchemaViews().isEmpty(), is(false));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getInformationSchemaViews().isEmpty(), is(false));
+    assertThat(
+        schemaRetrievalOptions
+            .getInformationSchemaViews()
+            .hasQuery(InformationSchemaKey.ADDITIONAL_COLUMN_ATTRIBUTES),
+        is(true));
 
     builder.withInformationSchemaViews(null);
-    assertThat(builder.getInformationSchemaViews().isEmpty(), is(true));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.getInformationSchemaViews().isEmpty(), is(true));
   }
 
   @Test
@@ -252,14 +283,14 @@ public class SchemaRetrievalOptionsBuilderTest {
     MetadataRetrievalStrategy metadataRetrievalStrategy;
 
     metadataRetrievalStrategy =
-        builder.get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
+        builder.toOptions().get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
     assertThat(metadataRetrievalStrategy, is(MetadataRetrievalStrategy.metadata));
 
     builder.with(
         SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy,
         MetadataRetrievalStrategy.data_dictionary_all);
     metadataRetrievalStrategy =
-        builder.get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
+        builder.toOptions().get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
     assertThat(metadataRetrievalStrategy, is(MetadataRetrievalStrategy.data_dictionary_all));
 
     assertThat(builder.get(null), is(nullValue()));
@@ -272,12 +303,12 @@ public class SchemaRetrievalOptionsBuilderTest {
         SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy,
         MetadataRetrievalStrategy.data_dictionary_all);
     metadataRetrievalStrategy =
-        builder.get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
+        builder.toOptions().get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
     assertThat(metadataRetrievalStrategy, is(MetadataRetrievalStrategy.data_dictionary_all));
     // Test
     builder.with(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy, null);
     metadataRetrievalStrategy =
-        builder.get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
+        builder.toOptions().get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
     assertThat(metadataRetrievalStrategy, is(MetadataRetrievalStrategy.metadata));
 
     // 2.
@@ -286,12 +317,12 @@ public class SchemaRetrievalOptionsBuilderTest {
         SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy,
         MetadataRetrievalStrategy.data_dictionary_all);
     metadataRetrievalStrategy =
-        builder.get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
+        builder.toOptions().get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
     assertThat(metadataRetrievalStrategy, is(MetadataRetrievalStrategy.data_dictionary_all));
     // Test
     builder.with(null, MetadataRetrievalStrategy.metadata);
     metadataRetrievalStrategy =
-        builder.get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
+        builder.toOptions().get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
     assertThat(metadataRetrievalStrategy, is(MetadataRetrievalStrategy.data_dictionary_all));
 
     // 3.
@@ -300,34 +331,54 @@ public class SchemaRetrievalOptionsBuilderTest {
         SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy,
         MetadataRetrievalStrategy.data_dictionary_all);
     metadataRetrievalStrategy =
-        builder.get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
+        builder.toOptions().get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
     assertThat(metadataRetrievalStrategy, is(MetadataRetrievalStrategy.data_dictionary_all));
     // Test
     builder.with(null, null);
     metadataRetrievalStrategy =
-        builder.get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
+        builder.toOptions().get(SchemaInfoMetadataRetrievalStrategy.foreignKeysRetrievalStrategy);
     assertThat(metadataRetrievalStrategy, is(MetadataRetrievalStrategy.data_dictionary_all));
   }
 
   @Test
-  public void override_catalog_schema() {
+  public void override_catalog_schema() throws SQLException {
+    final DatabaseMetaData dbMetaData = mock(DatabaseMetaData.class);
+    when(dbMetaData.supportsCatalogsInTableDefinitions()).thenReturn(false);
+    when(dbMetaData.supportsSchemasInTableDefinitions()).thenReturn(true);
+
+    final Connection connection = mock(Connection.class);
+    when(connection.getMetaData()).thenReturn(dbMetaData);
+
     final SchemaRetrievalOptionsBuilder builder = SchemaRetrievalOptionsBuilder.builder();
+    builder.fromConnnection(connection);
 
-    assertThat(builder.overridesSupportsCatalogs, isEmpty());
+    SchemaRetrievalOptions schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsCatalogs(), is(false));
+    assertThat(schemaRetrievalOptions.isSupportsSchemas(), is(true));
+
     builder.withSupportsCatalogs();
-    assertThat(builder.overridesSupportsCatalogs, isPresentAndIs(true));
-    builder.withoutSupportsCatalogs();
-    assertThat(builder.overridesSupportsCatalogs, isEmpty());
-    builder.withDoesNotSupportCatalogs();
-    assertThat(builder.overridesSupportsCatalogs, isPresentAndIs(false));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsCatalogs(), is(true));
 
-    assertThat(builder.overridesSupportsSchemas, isEmpty());
+    builder.withoutSupportsCatalogs();
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsCatalogs(), is(false));
+
+    builder.withDoesNotSupportCatalogs();
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsCatalogs(), is(false));
+
     builder.withSupportsSchemas();
-    assertThat(builder.overridesSupportsSchemas, isPresentAndIs(true));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsSchemas(), is(true));
+
     builder.withoutSupportsSchemas();
-    assertThat(builder.overridesSupportsSchemas, isEmpty());
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsSchemas(), is(true));
+
     builder.withDoesNotSupportSchemas();
-    assertThat(builder.overridesSupportsSchemas, isPresentAndIs(false));
+    schemaRetrievalOptions = builder.toOptions();
+    assertThat(schemaRetrievalOptions.isSupportsSchemas(), is(false));
   }
 
   @Test
@@ -343,19 +394,15 @@ public class SchemaRetrievalOptionsBuilderTest {
   public void typeMap() {
     final SchemaRetrievalOptionsBuilder builder = SchemaRetrievalOptionsBuilder.builder();
 
-    assertThat(builder.overridesTypeMap, isEmpty());
     assertThat(builder.toOptions().getTypeMap(), is(aMapWithSize(39)));
 
     final Map<String, Class<?>> typeMap = new HashMap<>();
     typeMap.put(String.class.getSimpleName(), String.class);
     builder.withTypeMap(typeMap);
-    assertThat(builder.overridesTypeMap, isPresent());
-    assertThat(builder.overridesTypeMap.get().size(), is(1));
     assertThat(builder.toOptions().getTypeMap(), is(aMapWithSize(1)));
     assertThat(builder.toOptions().getTypeMap(), hasKey("String"));
 
     builder.withTypeMap(null);
-    assertThat(builder.overridesTypeMap, isEmpty());
     assertThat(builder.toOptions().getTypeMap(), is(aMapWithSize(39)));
   }
 }

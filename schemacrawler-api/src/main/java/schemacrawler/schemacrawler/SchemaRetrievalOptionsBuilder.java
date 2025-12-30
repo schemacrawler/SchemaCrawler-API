@@ -139,10 +139,6 @@ public final class SchemaRetrievalOptionsBuilder
     return null;
   }
 
-  public InformationSchemaViews getInformationSchemaViews() {
-    return informationSchemaViews;
-  }
-
   @Override
   public SchemaRetrievalOptions toOptions() {
     return new SchemaRetrievalOptions(this);

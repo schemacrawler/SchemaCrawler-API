@@ -6,12 +6,13 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-package schemacrawler.schemacrawler;
+package schemacrawler.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
+import schemacrawler.schemacrawler.LoadOptionsBuilder;
 import us.fatehi.utility.scheduler.TaskRunner;
 
 public class LoadOptionsBuilderTest {
